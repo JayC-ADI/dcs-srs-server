@@ -1,6 +1,12 @@
 # DCS-SRS Voice Server (DCS Simple Radio Standalone)
 
-A high-performance, containerized DCS-SRS voice server implementation designed for Digital Combat Simulator (DCS) radio communications. This project provides a robust, scalable solution for realistic military aviation radio simulation and communication.
+A high-performance, containerized DCS-SRS voice server implementation designed for Digital Combat Simulator (DCS) radio communications. This Docker image enables easy deployment of DCS-SRS servers to high-speed VMs and VPS instances, making voice communication setup simpler for DCS groups and communities.
+
+## About This Repository
+
+This repository provides a Docker image for the Linux DCS-SRS server, allowing end users and groups to easily deploy working SRS servers to virtual machines and VPS instances. This containerized approach simplifies server setup and makes reliable voice communication more accessible for DCS communities.
+
+**Special Thanks**: Atlas Defense Industries ([https://adi.sc/](https://adi.sc/)) for helping to put together and test this Docker setup.
 
 ## Table of Contents
 
@@ -325,6 +331,8 @@ Find the latest images at: [Docker Hub - jaycadi/dcs-srs-server](https://hub.doc
 
 ### DCS-SRS Resources
 
+- [DCS-SRS Official Website](http://dcssimpleradio.com/)
+- [DCS-SRS Binary Downloads](https://github.com/ciribob/DCS-SimpleRadioStandalone/releases)
 - [DCS-SRS Official Documentation](https://github.com/ciribob/DCS-SimpleRadioStandalone)
 - [DCS World Forums](https://forums.eagle.ru/)
 
@@ -333,7 +341,14 @@ Find the latest images at: [Docker Hub - jaycadi/dcs-srs-server](https://hub.doc
 - Create an issue in this repository for container-specific problems
 - Check DCS-SRS documentation for client setup and radio configuration
 - Visit DCS community forums for general DCS-SRS support
+- Download the latest DCS-SRS client from the [official releases page](https://github.com/ciribob/DCS-SimpleRadioStandalone/releases)
+
+## Acknowledgments
+
+Special thanks to **Atlas Defense Industries** ([https://adi.sc/](https://adi.sc/)) for their invaluable assistance in developing, testing, and validating this Docker containerization setup. Their expertise in DCS operations and server deployment has made this project possible.
 
 ---
 
 **Important**: DCS-SRS requires both TCP and UDP on port 5002. Ensure your firewall and network configuration allow both protocols.
+
+**Note**: This Docker image is designed to simplify DCS-SRS server deployment for communities and groups. For the latest DCS-SRS client software, visit [http://dcssimpleradio.com/](http://dcssimpleradio.com/) or download directly from the [GitHub releases page](https://github.com/ciribob/DCS-SimpleRadioStandalone/releases).
