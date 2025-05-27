@@ -29,4 +29,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r1
+          tags: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r3
