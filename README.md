@@ -43,12 +43,17 @@ The DCS-SRS Voice Server is a command-line application that provides realistic r
 
 ## Quick Start
 
-### Using Docker Compose (Recommended)
+### Using Docker Compose (Strongly Recommended)
 
-1. **Download the docker-compose.yml and .env files**
+The docker-compose method is the preferred way to run DCS-SRS server as it provides:
+- Automatic restart policies
+- Proper volume mounting for logs and config
+- Easy configuration management
+- Better container lifecycle management
+
+1. **Download the docker-compose.yml file**
    ```bash
    wget https://raw.githubusercontent.com/JayC-ADI/dcs-srs-server/main/docker-compose.yml
-   wget https://raw.githubusercontent.com/JayC-ADI/dcs-srs-server/main/.env.example -O .env
    ```
 
 2. **Start the service**
@@ -56,124 +61,191 @@ The DCS-SRS Voice Server is a command-line application that provides realistic r
    docker-compose up -d
    ```
 
-The service will start automatically using the configuration from your `.env` file.
+The service will start automatically using the default configuration. You can modify the environment variables directly in the docker-compose.yml file.
+
+### Using Docker Run with .env file (Alternative)
+
+If you prefer to use docker run with an .env file:
+
+1. **Download the .env.example file**
+   ```bash
+   wget https://raw.githubusercontent.com/JayC-ADI/dcs-srs-server/main/.env.example -O .env
+   ```
+
+2. **Edit the .env file to customize your server**
+   ```bash
+   nano .env
+   ```
+
+3. **Run with docker run**
+   ```bash
+   docker run -d \
+     --name dcs-srs-server \
+     -p 5002:5002/tcp \
+     -p 5002:5002/udp \
+     --env-file .env \
+     jaycadi/dcs-srs-server:latest
+   ```
 
 **Note**: Port 5002 requires both TCP and UDP protocols for proper DCS-SRS communication.
 
 ## Configuration
 
-### Environment Variables
+The DCS-SRS server can be configured using environment variables. The easiest way is to modify the docker-compose.yml file directly, but you can also use a .env file if using docker run.
 
-Configure your DCS-SRS server using environment variables in the `.env` file:
+### Docker Compose Configuration (Recommended)
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `SRS_SERVER_NAME` | Server display name | `DCS SRS Server` |
-| `SRS_PASSWORD` | Server password (optional) | `` |
-| `SRS_PORT` | Voice communication port | `5002` |
-| `SRS_LOG_LEVEL` | Logging level (debug, info, warn, error) | `info` |
-| `SRS_MAX_CLIENTS` | Maximum number of clients | `100` |
-| `SRS_RADIO_EFFECTS` | Enable radio effects (true/false) | `true` |
-| `SRS_COALITION_AUDIO_SECURITY` | Coalition audio security (true/false) | `false` |
-| `SRS_SPECTATOR_AUDIO` | Allow spectators to hear audio (true/false) | `true` |
-| `SRS_RECORDING_ENABLED` | Enable server-side recording (true/false) | `false` |
-| `SRS_RECORDING_QUALITY` | Recording quality (low/medium/high) | `medium` |
-| `SRS_AUTO_CONNECT_FREQUENCY` | Auto-connect frequency in MHz | `` |
-| `SRS_TEST_FREQUENCIES` | Comma-separated test frequencies | `` |
-| `SRS_GLOBAL_LOBBY_FREQUENCIES` | Global lobby frequencies | `` |
-| `SRS_DISTANCE_ATTENUATION` | Enable distance-based audio attenuation | `true` |
-| `SRS_LOS_ENABLED` | Enable line-of-sight calculations | `false` |
-| `SRS_EXTERNAL_AWACS_MODE` | External AWACS mode (true/false) | `false` |
-| `SRS_STRICT_RADIO_MODE` | Strict radio mode enforcement | `false` |
-| `SRS_VOX_ENABLED` | Voice activation (VOX) enabled | `true` |
-| `SRS_CLIENT_EXPORT_ENABLED` | Enable client data export | `false` |
-| `SRS_UPNP_ENABLED` | Enable UPnP port forwarding | `false` |
-| `SRS_RETRANSMISSION_NODE` | Act as retransmission node | `false` |
-| `SRS_ENCRYPTION_ENABLED` | Enable audio encryption | `false` |
-| `SRS_ENCRYPTION_KEY` | Encryption key (if encryption enabled) | `` |
-
-### Sample .env File
-
-```env
-# Server Configuration
-SRS_SERVER_NAME=My Squadron DCS SRS Server
-SRS_PASSWORD=
-SRS_PORT=5002
-SRS_LOG_LEVEL=info
-SRS_MAX_CLIENTS=50
-SRS_RADIO_EFFECTS=true
-
-# Audio Settings
-SRS_COALITION_AUDIO_SECURITY=false
-SRS_SPECTATOR_AUDIO=true
-SRS_DISTANCE_ATTENUATION=true
-SRS_LOS_ENABLED=false
-SRS_VOX_ENABLED=true
-
-# Recording Settings
-SRS_RECORDING_ENABLED=false
-SRS_RECORDING_QUALITY=medium
-
-# Advanced Settings
-SRS_EXTERNAL_AWACS_MODE=false
-SRS_STRICT_RADIO_MODE=false
-SRS_CLIENT_EXPORT_ENABLED=false
-SRS_UPNP_ENABLED=false
-SRS_RETRANSMISSION_NODE=false
-
-# Security Settings
-SRS_ENCRYPTION_ENABLED=false
-SRS_ENCRYPTION_KEY=
-```
-
-### Docker Compose Configuration
-
-The included `docker-compose.yml` file provides a complete setup:
+The included `docker-compose.yml` file provides a complete setup with all available configuration options:
 
 ```yaml
+# filepath: d:\Coding\ADI\new\dcs-srs-server\docker-compose.yml
+# Docker Compose configuration for DCS-SRS (Digital Combat Simulator - Simple Radio Standalone) server
+# This file defines how to run the SRS server in a Docker container
 version: '3.8'
 
 services:
-  dcs-srs-server:
-    image: jaycadi/dcs-srs-server:latest
-    container_name: dcs-srs-server
-    restart: unless-stopped
+  dcs-srs:
+    # Container name - change this if you want a different name for your container
+    container_name: dcs-srs
+    
+    # Docker image to use - only change if you need a different version
+    image: jaycadi/dcs-srs-server:2.2.0.1-beta-r5
+    
+    deploy:
+      # Number of container instances to run (1 = single server, 0 = disabled)
+      replicas: 1  # Change to 0 or any number to scale
+      restart_policy:
+        # Restart container automatically if it crashes
+        condition: any
+    
     ports:
-      - "${SRS_PORT:-5002}:5002/tcp"
-      - "${SRS_PORT:-5002}:5002/udp"
-    volumes:
-      - ./logs:/opt/srs/logs
-      - ./config:/opt/srs/config
+      # Port mapping: "host_port:container_port/protocol"
+      # Change "5002" on the left to use a different port on your host machine
+      - "5002:5002/udp"  # UDP port for voice communication
+      - "5002:5002/tcp"  # TCP port for client connections and data
+    
     environment:
-      - SRS_SERVER_NAME=${SRS_SERVER_NAME:-DCS SRS Server}
-      - SRS_PASSWORD=${SRS_PASSWORD:-}
-      - SRS_PORT=${SRS_PORT:-5002}
-      - SRS_LOG_LEVEL=${SRS_LOG_LEVEL:-info}
-      - SRS_MAX_CLIENTS=${SRS_MAX_CLIENTS:-100}
-      - SRS_RADIO_EFFECTS=${SRS_RADIO_EFFECTS:-true}
-      - SRS_COALITION_AUDIO_SECURITY=${SRS_COALITION_AUDIO_SECURITY:-false}
-      - SRS_SPECTATOR_AUDIO=${SRS_SPECTATOR_AUDIO:-true}
-      - SRS_RECORDING_ENABLED=${SRS_RECORDING_ENABLED:-false}
-      - SRS_RECORDING_QUALITY=${SRS_RECORDING_QUALITY:-medium}
-      - SRS_AUTO_CONNECT_FREQUENCY=${SRS_AUTO_CONNECT_FREQUENCY:-}
-      - SRS_TEST_FREQUENCIES=${SRS_TEST_FREQUENCIES:-}
-      - SRS_GLOBAL_LOBBY_FREQUENCIES=${SRS_GLOBAL_LOBBY_FREQUENCIES:-}
-      - SRS_DISTANCE_ATTENUATION=${SRS_DISTANCE_ATTENUATION:-true}
-      - SRS_LOS_ENABLED=${SRS_LOS_ENABLED:-false}
-      - SRS_EXTERNAL_AWACS_MODE=${SRS_EXTERNAL_AWACS_MODE:-false}
-      - SRS_STRICT_RADIO_MODE=${SRS_STRICT_RADIO_MODE:-false}
-      - SRS_VOX_ENABLED=${SRS_VOX_ENABLED:-true}
-      - SRS_CLIENT_EXPORT_ENABLED=${SRS_CLIENT_EXPORT_ENABLED:-false}
-      - SRS_UPNP_ENABLED=${SRS_UPNP_ENABLED:-false}
-      - SRS_RETRANSMISSION_NODE=${SRS_RETRANSMISSION_NODE:-false}
-      - SRS_ENCRYPTION_ENABLED=${SRS_ENCRYPTION_ENABLED:-false}
-      - SRS_ENCRYPTION_KEY=${SRS_ENCRYPTION_KEY:-}
-    healthcheck:
-      test: ["CMD", "netstat", "-tuln", "|", "grep", ":5002"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      # ===== GENERAL RADIO SETTINGS =====
+      
+      # Log all radio transmissions to file (true/false)
+      # Set to "true" if you want to record all voice communications
+      TRANSMISSION_LOG_ENABLED: "false"
+      
+      # Export connected clients list to JSON file (true/false)
+      # Useful for external applications that need to know who's connected
+      CLIENT_EXPORT_ENABLED: "false"
+      
+      # Export data for LotATC (Situational Awareness tool) (true/false)
+      # Frequencies that are always available for testing (comma-separated MHz)
+      # Add frequencies here that users can use to test their radio setup
+      TEST_FREQUENCIES: "247.2,120.3"
+      
+      # Frequencies available in the lobby before joining a mission (comma-separated MHz)
+      # Users can communicate on these frequencies while waiting
+      GLOBAL_LOBBY_FREQUENCIES: "248.22"
+      
+      # Enable External AWACS mode for server-side radio management (true/false)
+      # Set to "true" if you want the server to manage radios instead of DCS
+      EXTERNAL_AWACS_MODE: "true"
+      
+      # Prevent enemy teams from hearing each other's radio (true/false)
+      # Set to "true" for realistic military simulation
+      COALITION_AUDIO_SECURITY: "false"
+      
+      # Prevent spectators from hearing any radio communications (true/false)
+      # Set to "true" if spectators shouldn't hear mission communications
+      SPECTATORS_AUDIO_DISABLED: "false"
+      
+      # Enable Line of Sight radio limitations (true/false)
+      # Set to "true" for realistic radio range based on terrain and distance
+      LOS_ENABLED: "false"
+      
+      # Enable distance-based radio range limitations (true/false)
+      # Set to "true" for realistic radio range based on distance only
+      DISTANCE_ENABLED: "false"
+      
+      # Enable real-world radio transmission effects (true/false)
+      # Adds realistic radio static and effects to transmissions
+      IRL_RADIO_TX: "false"
+      
+      # Enable real-world radio interference effects (true/false)
+      # Adds realistic interference when receiving radio
+      IRL_RADIO_RX_INTERFERENCE: "false"
+      
+      # Allow more than 10 radio presets per aircraft (true/false)
+      # Set to "true" for expanded radio capabilities
+      RADIO_EXPANSION: "true"
+      
+      # Allow encrypted radio communications (true/false)
+      # Enables encryption features for secure communications
+      ALLOW_RADIO_ENCRYPTION: "true"
+      
+      # Force all radios to use encryption (true/false)
+      # Set to "true" if all communications must be encrypted
+      STRICT_RADIO_ENCRYPTION: "false"
+      
+      # Show number of users tuned to each frequency (true/false)
+      # Displays user count next to frequencies in the radio overlay
+      SHOW_TUNED_COUNT: "true"
+      
+      # Override individual radio effects settings (true/false)
+      # Forces server radio effects settings for all clients
+      RADIO_EFFECT_OVERRIDE: "false"
+      
+      # Show the name of who is transmitting (true/false)
+      # Displays transmitter's name during radio communications
+      SHOW_TRANSMITTER_NAME: "true"
+      
+      # Number of days to keep transmission logs (number)
+      # Older logs are automatically deleted after this many days
+      TRANSMISSION_LOG_RETENTION: "2"
+      
+      # Maximum number of retransmission nodes (0 = unlimited)
+      # Limits how many relay stations can chain together
+      RETRANSMISSION_NODE_LIMIT: "0"
+
+      # ===== SERVER CONNECTION SETTINGS =====
+      
+      # File path for exporting connected clients list
+      # Only change if you need the file in a different location
+      CLIENT_EXPORT_FILE_PATH: "clients-list.json"
+      
+      # IP address the server listens on (0.0.0.0 = all interfaces)
+      # Change only if you need to bind to a specific network interface
+      SERVER_IP: "0.0.0.0"
+      
+      # Port number the server listens on
+      # Must match the port mapping above (default: 5002)
+      SERVER_PORT: "5002"
+      
+      # Automatically configure router port forwarding via UPnP (true/false)
+      # Set to "true" if your router supports UPnP and you want automatic setup
+      UPNP_ENABLED: "true"
+      
+      # Check for beta version updates (true/false)
+      # Set to "true" if you want to be notified about beta releases
+      CHECK_FOR_BETA_UPDATES: "false"
+
+      # ===== EXTERNAL AWACS MODE PASSWORDS =====
+      # These passwords allow external applications to control radios
+      # Change these from default values for security!
+      
+      # Password for blue team external control
+      # Change "blue" to a secure password for blue team access
+      EXTERNAL_AWACS_MODE_BLUE_PASSWORD: "blue"
+      
+      # Password for red team external control  
+      # Change "red" to a secure password for red team access
+      EXTERNAL_AWACS_MODE_RED_PASSWORD: "red"
+```
+
+### Environment Variables Reference
+
+All configuration options are documented directly in the docker-compose.yml file with comments explaining each setting. Simply modify the values in the docker-compose.yml file and restart the service:
+
+```bash
+docker-compose down
+docker-compose up -d
 ```
 
 ## Troubleshooting

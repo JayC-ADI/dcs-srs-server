@@ -26,4 +26,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dcs-srs-server:2.2.0.1-beta-r4
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dcs-srs-server:2.2.0.1-beta-r5
