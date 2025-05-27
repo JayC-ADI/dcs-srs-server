@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  dcs-srs:
+    build: .
+    container_name: dcs-srs-server
+    ports:
+      - "5002:5002/udp"
+    environment:
+      # [General Settings]
+      TRANSMISSION_LOG_ENABLED: "false"
+      CLIENT_EXPORT_ENABLED: "false"
+      LOTATC_EXPORT_ENABLED: "false"
+      TEST_FREQUENCIES: "247.2,120.3"
+      GLOBAL_LOBBY_FREQUENCIES: "248.22"
+      EXTERNAL_AWACS_MODE: "true"
+      COALITION_AUDIO_SECURITY: "false"
+      SPECTATORS_AUDIO_DISABLED: "false"
+      LOS_ENABLED: "false"
+      DISTANCE_ENABLED: "false"
+      IRL_RADIO_TX: "false"
+      IRL_RADIO_RX_INTERFERENCE: "false"
+      RADIO_EXPANSION: "true"
+      ALLOW_RADIO_ENCRYPTION: "true"
+      STRICT_RADIO_ENCRYPTION: "false"
+      SHOW_TUNED_COUNT: "true"
+      RADIO_EFFECT_OVERRIDE: "false"
+      SHOW_TRANSMITTER_NAME: "true"
+      TRANSMISSION_LOG_RETENTION: "2"
+      RETRANSMISSION_NODE_LIMIT: "0"
+
+      # [Server Settings]
+      CLIENT_EXPORT_FILE_PATH: "clients-list.json"
+      SERVER_IP: "0.0.0.0"
+      SERVER_PORT: "5002"
+      UPNP_ENABLED: "true"
+      CHECK_FOR_BETA_UPDATES: "false"
+
+      # [External AWACS Mode Settings]
+      EXTERNAL_AWACS_MODE_BLUE_PASSWORD: "blue"
+      EXTERNAL_AWACS_MODE_RED_PASSWORD: "red"
