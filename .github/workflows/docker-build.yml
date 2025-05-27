@@ -17,6 +17,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/dcs-srs-server:2.2.0.1-beta-r1
+        VERSION=2.2.0.1-beta-r1
+        IMAGE_NAME=ghcr.io/${{ github.repository_owner,, }}/dcs-srs-server:$VERSION
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
