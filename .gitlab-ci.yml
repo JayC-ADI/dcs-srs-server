@@ -5,7 +5,7 @@ services:
 
 variables:
   DOCKER_DRIVER: overlay2
-  IMAGE_TAG: registry.gitlab.com/jayc-adi1/dcs-srs-server:2.2.0.1-beta-r1
+  IMAGE_TAG: registry.gitlab.com/jayc-adi1/dcs-srs-server:2.2.0.1-beta-r2
 
 before_script:
   - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
