@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   dcs-srs:
-    image: registry.gitlab.com/jayc-adi1/dcs-srs-server:2.2.0.1-beta-r2
+    container_name: dcs-srs
+    image: jaycadi/dcs-srs-server:2.2.0.1-beta-r2
     deploy:
       replicas: 1  # Change to 0 or any number to scale
       restart_policy:
