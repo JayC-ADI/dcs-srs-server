@@ -345,7 +345,7 @@ Find the latest images at: [Docker Hub - jaycadi/dcs-srs-server](https://hub.doc
 
 ## Acknowledgments
 
-Special thanks to **Atlas Defense Industries** ([https://adi.sc/](https://adi.sc/)) for their invaluable assistance in developing, testing, and validating this Docker containerization setup. Their expertise in DCS operations and server deployment has made this project possible.
+Special thanks to **Atlas Defense Industries** ([https://adi.sc/](https://adi.sc/)) for their invaluable assistance in developing, testing, and validating this Docker containerization setup. ADI is the largest exclusive organization in Star Citizen and has extensively tested this DCS-SRS Docker implementation with over 90 concurrent users, ensuring it can handle large-scale operations. Their expertise in large-scale gaming operations and server deployment has made this project possible and battle-tested for real-world use.
 
 ---
 
