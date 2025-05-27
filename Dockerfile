@@ -20,7 +20,6 @@ COPY entrypoint.sh .
 # Make binaries executable
 RUN chmod +x SRS-Server-Commandline entrypoint.sh
 
-# Force image uniqueness to invalidate GHCR layer caching issues
-LABEL build-id="2025-05-27-r3"
+LABEL build-id="unique-2025-05-27-r4"
 
 ENTRYPOINT ["./entrypoint.sh"]
