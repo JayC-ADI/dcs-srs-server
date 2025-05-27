@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   dcs-srs:
-    build: .
+    image: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r1
     container_name: dcs-srs-server
     ports:
       - "5002:5002/udp"
