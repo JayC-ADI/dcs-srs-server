@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   dcs-srs:
-    image: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r2
+    image: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r3
     deploy:
       replicas: 1  # Change to 0 or any number to scale
       restart_policy:
