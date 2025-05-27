@@ -2,10 +2,14 @@ version: '3.8'
 
 services:
   dcs-srs:
-    image: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r1
-    container_name: dcs-srs-server
+    image: ghcr.io/jayc-adi/dcs-srs-server:2.2.0.1-beta-r2
+    deploy:
+      replicas: 1  # Change to 0 or any number to scale
+      restart_policy:
+        condition: any
     ports:
       - "5002:5002/udp"
+      - "5002:5002/tcp"
     environment:
       # [General Settings]
       TRANSMISSION_LOG_ENABLED: "false"
