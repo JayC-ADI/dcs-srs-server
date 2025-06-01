@@ -327,7 +327,7 @@ Share these details with your pilots:
 
 ### Docker Hub
 
-Find the latest images at: [Docker Hub - jaycadi/dcs-srs-server](https://hub.docker.com/repository/docker/jaycadi/dcs-srs-server/general)
+Find the latest images at: [Docker Hub - jaycadi/dcs-srs-server](https://hub.docker.com/r/jaycadi/dcs-srs-server)
 
 ### DCS-SRS Resources
 
