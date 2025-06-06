@@ -115,7 +115,7 @@ services:
     container_name: dcs-srs
     
     # Docker image to use - only change if you need a different version
-    image: jaycadi/dcs-srs-server:2.2.0.2-beta
+    image: jaycadi/dcs-srs-server:2.2.0.3-beta
     
     deploy:
       # Number of container instances to run (1 = single server, 0 = disabled)
