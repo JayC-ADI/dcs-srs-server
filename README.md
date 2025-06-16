@@ -301,6 +301,7 @@ Version 2.2.0.4 introduces several new server management features:
 - **Simplified Chat Commands**: New shorter autoconnect chat command (just port needed)
 - **Enhanced UI**: Consistent buttons and interface improvements across settings
 - **Better Logging**: Fixed transmission logging with proper CSV format support
+- **Server-Side Presets Fix**: Automatic command-line argument handling for server-side presets feature
 
 ### File Structure
 
@@ -372,12 +373,16 @@ curl -X POST http://your-server:8080/client/ban/guid/12345678-1234-1234-1234-123
 
 Server-side channel presets allow you to provide predefined radio configurations to all clients. This feature is particularly useful for organized events or training scenarios.
 
+**Important**: The SRS server requires the `--serverPresetChannelsEnabled=true` command-line argument to activate server-side presets, regardless of the configuration file setting. This Docker image automatically handles this requirement - when you set `SERVER_SIDE_PRESETS_ENABLED: "true"`, the entrypoint script will automatically add the necessary command-line argument during server startup.
+
 ### Setting Up Presets
 
 1. **Enable the Feature**
    ```yaml
    SERVER_SIDE_PRESETS_ENABLED: "true"
    ```
+   
+   The entrypoint script will automatically add `--serverPresetChannelsEnabled=true` to the server startup command when this is enabled.
 
 2. **Create Preset Files**
    Create `.txt` files in the mounted `Presets/` directory (default: `/docker/dcs-srs/Presets/` on the host).
@@ -413,6 +418,8 @@ To update presets:
 1. Edit files in the host directory: `/docker/dcs-srs/Presets/`
 2. Changes are automatically picked up by the server
 3. No container restart required for preset changes
+
+**Note**: If server-side presets aren't working, ensure `SERVER_SIDE_PRESETS_ENABLED` is set to `"true"` (as a string) in your docker-compose.yml or .env file. The containerized solution automatically handles the required command-line argument that the SRS server needs to enable this feature.
 
 ## IP Banning
 

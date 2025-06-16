@@ -81,4 +81,15 @@ echo ""
 # START THE SRS SERVER
 # ============================================================================
 echo "Starting SRS Server..."
-exec ./SRS-Server-Commandline --cfg=server.cfg
+
+# Build the startup command with conditional arguments
+STARTUP_CMD="./SRS-Server-Commandline --cfg=server.cfg"
+
+# Add server-side presets flag if enabled
+if [ "${SERVER_SIDE_PRESETS_ENABLED:-false}" = "true" ]; then
+    STARTUP_CMD="$STARTUP_CMD --serverPresetChannelsEnabled=true"
+    echo "Server-side presets enabled via command line argument"
+fi
+
+echo "Executing: $STARTUP_CMD"
+exec $STARTUP_CMD
