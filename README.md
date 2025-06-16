@@ -157,11 +157,11 @@ services:
       
       # Enable REST API for server management (true/false)
       # Set to "true" to enable HTTP API for client management
-      REST_API_ENABLED: "false"
+      HTTP_SERVER_ENABLED: "false"
       
       # REST API port (only used if REST_API_ENABLED is true)
       # Port for the HTTP API server (different from SRS port)
-      REST_API_PORT: "8080"
+      HTTP_SERVER_PORT: "8080"
       
       # ===== ADVANCED RADIO SETTINGS =====
       
@@ -301,7 +301,7 @@ The server now organizes files as follows:
 
 ## REST API
 
-The server now includes an optional REST API for remote management. Enable it by setting `REST_API_ENABLED: "true"` in your configuration.
+The server now includes an optional REST API for remote management. Enable it by setting `HTTP_SERVER_ENABLED: "true"` in your configuration.
 
 **⚠️ SECURITY WARNING**: The REST API provides administrative control over your server including the ability to kick and ban clients. Do NOT expose port 8080 to the public internet. Only expose this port on internal networks or use proper authentication/firewall rules. Exposing this API publicly could allow unauthorized users to take control of your server.
 
