@@ -14,6 +14,24 @@ set -e
 CONFIG_FILE="server.cfg"
 
 # ============================================================================
+# CREATE REQUIRED DIRECTORIES
+# ============================================================================
+# Create directories that the SRS server expects to exist
+echo "Creating required SRS server directories..."
+
+# Create directories if they don't exist
+mkdir -p data
+mkdir -p exports  
+mkdir -p logs
+mkdir -p Presets
+
+# Set appropriate permissions (readable/writable by owner, readable by group)
+chmod 755 data exports logs Presets
+
+echo "Created directories: data, exports, logs, Presets"
+echo ""
+
+# ============================================================================
 # GENERATE CONFIGURATION FILE
 # ============================================================================
 # Create a new configuration file (overwrites any existing file)
