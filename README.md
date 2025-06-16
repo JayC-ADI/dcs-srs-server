@@ -124,7 +124,7 @@ services:
     container_name: dcs-srs
     
     # Docker image to use - only change if you need a different version
-    image: jaycadi/dcs-srs-server:2.2.0.4
+    image: jaycadi/dcs-srs-server:2.2.0.4-5
     
     deploy:
       # Number of container instances to run (1 = single server, 0 = disabled)
@@ -275,14 +275,18 @@ services:
       EXTERNAL_AWACS_MODE_RED_PASSWORD: "red"
 ```
 
-### Environment Variables Reference
+**Important Note about Volume Mounts and Configuration**: When using volume mounts (recommended), the server will generate initial configuration files (`server.cfg`, preset files, etc.) on the first run based on your environment variables. After the first run, the server will preserve and use the existing configuration files in the mounted directory (`/docker/dcs-srs/` by default). 
 
-All configuration options are documented directly in the docker-compose.yml file with comments explaining each setting. Simply modify the values in the docker-compose.yml file and restart the service:
+To modify the configuration after the initial setup:
 
-```bash
-docker-compose down
-docker-compose up -d
-```
+1. Stop the container: `docker-compose down`
+2. Edit the configuration files directly in your mounted directory:
+   - Main config: `/docker/dcs-srs/server.cfg`
+   - Presets: `/docker/dcs-srs/Presets/*.txt`
+   - Banned IPs: `/docker/dcs-srs/banned.txt`
+3. Restart the container: `docker-compose up -d`
+
+This approach ensures your configuration changes persist across container restarts and updates. Environment variables in the docker-compose.yml file are only used for initial configuration generation.
 
 ## Server Features
 
