@@ -8,9 +8,9 @@ CONFIG_FILE="server.cfg"
 # CREATE REQUIRED DIRECTORIES
 # ============================================================================
 echo "Creating required SRS server directories..."
-mkdir -p data exports logs Presets
-chmod 755 data exports logs Presets
-echo "Created directories: data, exports, logs, Presets"
+mkdir -p Presets
+chmod 755 Presets
+echo "Created directories: Presets"
 echo ""
 
 # ============================================================================

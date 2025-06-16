@@ -293,11 +293,10 @@ Version 2.2.0.4 introduces several new server management features:
 
 **Important**: Version 2.2.0.4 introduces a new folder structure. If you were referencing export files or external audio, verify that paths are correct after upgrading.
 
-The server now organizes files as follows:
-- `Presets/` - Server-side channel presets
-- `logs/` - Transmission logs and server logs  
-- `data/` - Configuration files and banned.txt
-- `exports/` - Client export files
+The server stores all files within the container:
+- Server configuration and banned IPs are managed internally
+- Logs and exports are stored within the container filesystem
+- No external volume mounts are required for basic operation
 
 ## REST API
 
@@ -369,7 +368,7 @@ Server-side channel presets allow you to provide predefined radio configurations
    ```
 
 2. **Create Preset Files**
-   Create `.json` files in the `Presets/` folder. The Docker container automatically mounts this folder.
+   Create `.txt` files in the `Presets/` folder using the format described in the Presets/README.md file.
 
 3. **Preset File Format**
    ```json
@@ -399,29 +398,24 @@ Server-side channel presets allow you to provide predefined radio configurations
 ### Managing Presets
 
 To update presets:
-1. Modify files in the `./presets/` folder on your host
+1. Modify files in the container's `Presets/` folder
 2. Changes are automatically picked up by the server
 3. Clients will receive updated presets on their next connection
 
 ## IP Banning
 
-The server automatically manages banned IPs using a `banned.txt` file:
-
-- **Location**: Created in the server's data directory (`./data/banned.txt`)
-- **Format**: One IP address per line
-- **Management**: 
-  - Add IPs using the REST API ban endpoints
-  - Remove IPs by editing the file and restarting the server
-  - The file is created automatically when the first ban occurs
+The server automatically manages banned IPs using a `banned.txt` file stored within the container. IPs can be banned using the REST API endpoints.
 
 ### Manual IP Management
 
-```bash
-# View banned IPs
-cat ./data/banned.txt
+Since the banned.txt file is stored within the container, manual IP management requires accessing the container:
 
-# Remove a banned IP (then restart server)
-sed -i '/192.168.1.100/d' ./data/banned.txt
+```bash
+# Access the container to view banned IPs
+docker exec -it dcs-srs cat /app/banned.txt
+
+# Remove a banned IP by recreating the container
+# (This will clear all bans - use REST API for selective management)
 docker-compose restart
 ```
 
