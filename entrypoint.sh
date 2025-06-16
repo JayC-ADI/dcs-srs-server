@@ -18,6 +18,12 @@ echo ""
 # ============================================================================
 echo "Generating SRS server configuration..."
 
+# Remove existing configuration file if it exists
+if [ -f "$CONFIG_FILE" ]; then
+    echo "Removing existing $CONFIG_FILE..."
+    rm "$CONFIG_FILE"
+fi
+
 # [General Settings]
 {
 echo "[General Settings]"
