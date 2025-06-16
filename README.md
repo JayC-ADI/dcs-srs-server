@@ -15,6 +15,9 @@ This repository provides a Docker image for the Linux DCS-SRS server, allowing e
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
+- [Server Features](#server-features)
+- [REST API](#rest-api)
+- [Channel Presets](#channel-presets)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
@@ -29,6 +32,8 @@ The DCS-SRS Voice Server is a command-line application that provides realistic r
 - **Docker Container**: Containerized deployment solution for easy hosting
 - **Radio Simulation**: Realistic military radio frequency and effect simulation
 - **Voice Processing**: Real-time voice communication with radio effects
+- **REST API**: Server management and client control via HTTP API
+- **Server-Side Presets**: Optional channel presets managed by the server
 
 ## Features
 
@@ -41,6 +46,10 @@ The DCS-SRS Voice Server is a command-line application that provides realistic r
 - 🔒 **Secure**: Encrypted voice communication and server authentication
 - 🌐 **Multi-Client**: Support for multiple simultaneous DCS clients
 - ⚡ **Low Latency**: Optimized for real-time voice communication
+- 🛠️ **REST API**: Remote server management and client administration
+- 📻 **Server-Side Presets**: Centralized channel preset management
+- 📝 **Enhanced Logging**: Improved transmission logging with CSV format
+- 🚫 **IP Banning**: Automatic IP ban management with banned.txt file
 
 ## Prerequisites
 
@@ -115,7 +124,7 @@ services:
     container_name: dcs-srs
     
     # Docker image to use - only change if you need a different version
-    image: jaycadi/dcs-srs-server:2.2.0.3-beta
+    image: jaycadi/dcs-srs-server:2.2.0.4
     
     deploy:
       # Number of container instances to run (1 = single server, 0 = disabled)
@@ -129,6 +138,7 @@ services:
       # Change "5002" on the left to use a different port on your host machine
       - "5002:5002/udp"  # UDP port for voice communication
       - "5002:5002/tcp"  # TCP port for client connections and data
+      - "8080:8080/tcp"  # REST API port (only expose if using REST API)
     
     environment:
       # ===== GENERAL RADIO SETTINGS =====
@@ -140,6 +150,20 @@ services:
       # Export connected clients list to JSON file (true/false)
       # Useful for external applications that need to know who's connected
       CLIENT_EXPORT_ENABLED: "false"
+      
+      # Enable server-side channel presets (true/false)
+      # Set to "true" to provide predefined radio presets to clients
+      SERVER_SIDE_PRESETS_ENABLED: "false"
+      
+      # Enable REST API for server management (true/false)
+      # Set to "true" to enable HTTP API for client management
+      REST_API_ENABLED: "false"
+      
+      # REST API port (only used if REST_API_ENABLED is true)
+      # Port for the HTTP API server (different from SRS port)
+      REST_API_PORT: "8080"
+      
+      # ===== ADVANCED RADIO SETTINGS =====
       
       # Export data for LotATC (Situational Awareness tool) (true/false)
       # Frequencies that are always available for testing (comma-separated MHz)
@@ -254,6 +278,153 @@ docker-compose down
 docker-compose up -d
 ```
 
+## Server Features
+
+### Enhanced Server Management
+
+Version 2.2.0.4 introduces several new server management features:
+
+- **Improved IP Detection**: Automatic server IP detection for SRS connections
+- **Simplified Chat Commands**: New shorter autoconnect chat command (just port needed)
+- **Enhanced UI**: Consistent buttons and interface improvements across settings
+- **Better Logging**: Fixed transmission logging with proper CSV format support
+
+### File Structure
+
+**Important**: Version 2.2.0.4 introduces a new folder structure. If you were referencing export files or external audio, verify that paths are correct after upgrading.
+
+The server now organizes files as follows:
+- `Presets/` - Server-side channel presets
+- `logs/` - Transmission logs and server logs  
+- `data/` - Configuration files and banned.txt
+- `exports/` - Client export files
+
+## REST API
+
+The server now includes an optional REST API for remote management. Enable it by setting `REST_API_ENABLED: "true"` in your configuration.
+
+**⚠️ SECURITY WARNING**: The REST API provides administrative control over your server including the ability to kick and ban clients. Do NOT expose port 8080 to the public internet. Only expose this port on internal networks or use proper authentication/firewall rules. Exposing this API publicly could allow unauthorized users to take control of your server.
+
+### API Security Best Practices
+
+- **Internal Use Only**: Only bind the API to internal/private networks
+- **Firewall Protection**: Use firewall rules to restrict API access to trusted IPs
+- **VPN Access**: Consider requiring VPN access for API management
+- **Monitor Usage**: Keep logs of API access and watch for unauthorized attempts
+
+### Available Endpoints
+
+#### Get Connected Clients
+```http
+GET /clients
+```
+Returns a list of all currently connected clients with their information.
+
+#### Kick Client by GUID
+```http
+POST /client/kick/guid/{client_guid}
+```
+Disconnects a client using their unique GUID.
+
+#### Kick Client by Name
+```http
+POST /client/kick/name/{client_name}
+```
+Disconnects a client using their display name.
+
+#### Ban Client by GUID
+```http
+POST /client/ban/guid/{client_guid}
+```
+Bans a client by their GUID and adds their IP to the banned list.
+
+#### Ban Client by Name
+```http
+POST /client/ban/name/{client_name}
+```
+Bans a client by their name and adds their IP to the banned list.
+
+### API Usage Examples
+
+```bash
+# Get all connected clients
+curl http://your-server:8080/clients
+
+# Kick a client by name
+curl -X POST http://your-server:8080/client/kick/name/PlayerName
+
+# Ban a client by GUID
+curl -X POST http://your-server:8080/client/ban/guid/12345678-1234-1234-1234-123456789abc
+```
+
+## Channel Presets
+
+Server-side channel presets allow you to provide predefined radio configurations to all clients. This feature is particularly useful for organized events or training scenarios.
+
+### Setting Up Presets
+
+1. **Enable the Feature**
+   ```yaml
+   SERVER_SIDE_PRESETS_ENABLED: "true"
+   ```
+
+2. **Create Preset Files**
+   Create `.json` files in the `Presets/` folder. The Docker container automatically mounts this folder.
+
+3. **Preset File Format**
+   ```json
+   {
+     "name": "Training Frequencies",
+     "channels": [
+       {
+         "name": "Tower",
+         "frequency": 251.0,
+         "modulation": "AM"
+       },
+       {
+         "name": "Ground",
+         "frequency": 249.5,
+         "modulation": "FM"
+       }
+     ]
+   }
+   ```
+
+### Preset Naming
+
+- Preset names ignore spaces, casing, and special characters for matching
+- Files should be named descriptively (e.g., `training-presets.json`)
+- Clients will see these presets in their SRS radio interface
+
+### Managing Presets
+
+To update presets:
+1. Modify files in the `./presets/` folder on your host
+2. Changes are automatically picked up by the server
+3. Clients will receive updated presets on their next connection
+
+## IP Banning
+
+The server automatically manages banned IPs using a `banned.txt` file:
+
+- **Location**: Created in the server's data directory (`./data/banned.txt`)
+- **Format**: One IP address per line
+- **Management**: 
+  - Add IPs using the REST API ban endpoints
+  - Remove IPs by editing the file and restarting the server
+  - The file is created automatically when the first ban occurs
+
+### Manual IP Management
+
+```bash
+# View banned IPs
+cat ./data/banned.txt
+
+# Remove a banned IP (then restart server)
+sed -i '/192.168.1.100/d' ./data/banned.txt
+docker-compose restart
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -302,10 +473,21 @@ docker-compose ps
 ### Network Requirements
 
 - **Port 5002 TCP**: Required for client synchronization and server communication
-- **Port 5002 UDP**: Required for voice data transmission
+- **Port 5002 UDP**: Required for voice data transmission  
+- **Port 8080 TCP**: Required for REST API (if enabled) - ⚠️ **DO NOT expose to internet**
 - **Firewall**: Ensure both TCP and UDP traffic is allowed on port 5002
+- **Important**: The server opens ONE PORT using both TCP AND UDP protocols - both must be forwarded
 
-## DCS Integration
+### Server Hosting Notes
+
+For server hosting:
+- **Always open both TCP AND UDP on port 5002** (or your configured port)
+- **REST API Security**: If using the REST API, only expose port 8080 to trusted networks
+- Use manual port forwarding - UPnP may not work reliably for both protocols
+- If clients can connect but can't use PTT (Push-to-Talk), check UDP port forwarding
+- The VoIP Green Plug indicator shows if voice communication is working properly
+
+### DCS Integration
 
 ### Client Setup
 
@@ -349,6 +531,6 @@ Special thanks to **Atlas Defense Industries** ([https://adi.sc/](https://adi.sc
 
 ---
 
-**Important**: DCS-SRS requires both TCP and UDP on port 5002. Ensure your firewall and network configuration allow both protocols.
+**Important**: Version 2.2.0.4 requires both TCP and UDP on the same port (default 5002). The server will NOT work properly if only one protocol is forwarded. Ensure your firewall and network configuration allow both protocols.
 
 **Note**: This Docker image is designed to simplify DCS-SRS server deployment for communities and groups. For the latest DCS-SRS client software, visit [http://dcssimpleradio.com/](http://dcssimpleradio.com/) or download directly from the [GitHub releases page](https://github.com/ciribob/DCS-SimpleRadioStandalone/releases).

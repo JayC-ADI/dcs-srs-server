@@ -28,6 +28,9 @@ echo "[General Settings]" > "$CONFIG_FILE"
 # These control what information the server records and shares
 echo "TRANSMISSION_LOG_ENABLED=${TRANSMISSION_LOG_ENABLED:-false}" >> "$CONFIG_FILE"  # Log radio transmissions
 echo "CLIENT_EXPORT_ENABLED=${CLIENT_EXPORT_ENABLED:-false}" >> "$CONFIG_FILE"        # Export client list to file
+echo "SERVER_SIDE_PRESETS_ENABLED=${SERVER_SIDE_PRESETS_ENABLED:-false}" >> "$CONFIG_FILE" # Enable server-side channel presets
+echo "REST_API_ENABLED=${REST_API_ENABLED:-false}" >> "$CONFIG_FILE"                  # Enable REST API for server management
+echo "REST_API_PORT=${REST_API_PORT:-8080}" >> "$CONFIG_FILE"                         # REST API port
 echo "LOTATC_EXPORT_ENABLED=${LOTATC_EXPORT_ENABLED:-false}" >> "$CONFIG_FILE"        # Export data for LotATC (air traffic control software)
 
 # Radio Frequency Settings
@@ -79,8 +82,8 @@ echo "" >> "$CONFIG_FILE"
 # External AWACS Authentication Settings
 # These passwords allow external AWACS clients to connect with special privileges
 echo "[External AWACS Mode Settings]" >> "$CONFIG_FILE"
-echo "EXTERNAL_AWACS_MODE_BLUE_PASSWORD=${EXTERNAL_AWACS_MODE_BLUE_PASSWORD:-adi}" >> "$CONFIG_FILE" # Password for blue team AWACS
-echo "EXTERNAL_AWACS_MODE_RED_PASSWORD=${EXTERNAL_AWACS_MODE_RED_PASSWORD:-}" >> "$CONFIG_FILE"       # Password for red team AWACS (empty = disabled)
+echo "EXTERNAL_AWACS_MODE_BLUE_PASSWORD=${EXTERNAL_AWACS_MODE_BLUE_PASSWORD:-blue}" >> "$CONFIG_FILE" # Password for blue team AWACS
+echo "EXTERNAL_AWACS_MODE_RED_PASSWORD=${EXTERNAL_AWACS_MODE_RED_PASSWORD:-red}" >> "$CONFIG_FILE"    # Password for red team AWACS
 
 # ============================================================================
 # DISPLAY GENERATED CONFIGURATION
