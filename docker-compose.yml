@@ -39,13 +39,13 @@ services:
       # Set to "true" to provide predefined radio presets to clients
       SERVER_SIDE_PRESETS_ENABLED: "false"
 
-      # Enable REST API for server management (true/false)
-      # Set to "true" to enable HTTP API for client management
-      REST_API_ENABLED: "false"
+      # Enable HTTP server for SRS management endpoints (true/false)
+      # Required to enable the REST API (e.g. /clients, /client/kick/name/{name})
+      HTTP_SERVER_ENABLED: "true"
 
-      # REST API port (only used if REST_API_ENABLED is true)
-      # Port for the HTTP API server (different from SRS port)
-      REST_API_PORT: "8080"
+      # Port for the HTTP server (must match exposed port above, e.g., 8080:8080)
+      HTTP_SERVER_PORT: "8080"
+
 
       # ===== ADVANCED RADIO SETTINGS =====
 

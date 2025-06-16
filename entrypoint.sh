@@ -47,8 +47,8 @@ echo "[General Settings]" > "$CONFIG_FILE"
 echo "TRANSMISSION_LOG_ENABLED=${TRANSMISSION_LOG_ENABLED:-false}" >> "$CONFIG_FILE"  # Log radio transmissions
 echo "CLIENT_EXPORT_ENABLED=${CLIENT_EXPORT_ENABLED:-false}" >> "$CONFIG_FILE"        # Export client list to file
 echo "SERVER_SIDE_PRESETS_ENABLED=${SERVER_SIDE_PRESETS_ENABLED:-false}" >> "$CONFIG_FILE" # Enable server-side channel presets
-echo "REST_API_ENABLED=${REST_API_ENABLED:-false}" >> "$CONFIG_FILE"                  # Enable REST API for server management
-echo "REST_API_PORT=${REST_API_PORT:-8080}" >> "$CONFIG_FILE"                         # REST API port
+echo "HTTP_SERVER_ENABLED=${HTTP_SERVER_ENABLED:-false}" >> "$CONFIG_FILE"
+echo "HTTP_SERVER_PORT=${HTTP_SERVER_PORT:-8080}" >> "$CONFIG_FILE"
 echo "LOTATC_EXPORT_ENABLED=${LOTATC_EXPORT_ENABLED:-false}" >> "$CONFIG_FILE"        # Export data for LotATC (air traffic control software)
 
 # Radio Frequency Settings
