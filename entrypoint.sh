@@ -18,6 +18,12 @@ echo ""
 # ============================================================================
 echo "Generating SRS server configuration..."
 
+# Remove existing configuration file to ensure clean generation
+if [ -f "$CONFIG_FILE" ]; then
+    echo "Removing existing $CONFIG_FILE..."
+    rm -f "$CONFIG_FILE"
+fi
+
 # [General Settings]
 echo "[General Settings]" > "$CONFIG_FILE"
 echo "TRANSMISSION_LOG_ENABLED=${TRANSMISSION_LOG_ENABLED:-false}" >> "$CONFIG_FILE"
