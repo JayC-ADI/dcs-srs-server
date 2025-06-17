@@ -30,6 +30,7 @@ WORKDIR /opt/srs
 # These files must be present in the same directory as the Dockerfile
 COPY SRS-Server-Commandline .
 COPY entrypoint.sh .
+COPY NLog.config .
 
 # Make the copied files executable
 # This is necessary because file permissions may not be preserved during COPY
