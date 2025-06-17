@@ -279,9 +279,9 @@ services:
       EXTERNAL_AWACS_MODE_RED_PASSWORD: "red"
 ```
 
-**Important Note about Configuration**: The server generates its configuration file (`server.cfg`) automatically on startup based on your environment variables using the entrypoint script. The configuration is created fresh each time the container starts, ensuring your environment variable changes are always applied.
+**Important Note about Configuration**: The server generates its configuration file (`cfg/server.cfg`) automatically on startup based on your environment variables using the entrypoint script. The configuration is created fresh each time the container starts, ensuring your environment variable changes are always applied.
 
-**Volume Mounts**: Only the `Presets/` directory is mounted as a volume to allow easy management of server-side presets. All other configuration files (server.cfg, logs, client exports, etc.) are stored within the container and managed automatically.
+**Volume Mounts**: Only the `Presets/` directory is mounted as a volume to allow easy management of server-side presets. All other configuration files (cfg/server.cfg, logs, client exports, etc.) are stored within the container and managed automatically.
 
 To modify the configuration:
 
@@ -306,7 +306,7 @@ Version 2.2.0.4 introduces several new server management features:
 ### File Structure
 
 The server automatically creates and manages all necessary files within the container:
-- **server.cfg**: Generated automatically from environment variables on each startup
+- **cfg/server.cfg**: Generated automatically from environment variables on each startup
 - **Presets/**: Mounted volume for server-side preset management (optional)
 - **Logs and exports**: Stored within the container filesystem
 - **banned.txt**: Managed internally by the server for IP banning

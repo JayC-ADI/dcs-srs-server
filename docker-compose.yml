@@ -8,7 +8,7 @@ services:
     container_name: dcs-srs
 
     # Docker image to use - only change if you need a different version
-    image: jaycadi/dcs-srs-server:2.2.0.4-5
+    image: jaycadi/dcs-srs-server:2.2.0.4-11
 
     deploy:
       # Number of container instances to run (1 = single server, 0 = disabled)
@@ -24,27 +24,32 @@ services:
       - "5002:5002/tcp"  # TCP port for client connections and data
       - "8080:8080/tcp"  # REST API port (only expose if using REST API)
 
+    volumes:
+      # Mount host directories to allow user-managed presets and logs
+      - "/docker/dcs-srs/Presets:/opt/srs/Presets"
+      - "/docker/dcs-srs/logs:/opt/srs/logs"
+
     # WORKING DIRECTORY & ENTRYPOINT
     working_dir: /opt/srs
     entrypoint: ["/opt/srs/entrypoint.sh"]
-
-    volumes:
-      # Mount host Presets directory to allow user-managed presets
-      - "/docker/dcs-srs/Presets:/opt/srs/Presets"
 
     environment:
       # ===== GENERAL RADIO SETTINGS =====
 
       # Log all radio transmissions to file (true/false)
-      TRANSMISSION_LOG_ENABLED: "false"
+      # Set to "true" if you want to record all voice communications
+      TRANSMISSION_LOG_ENABLED: "true"
 
       # Export connected clients list to JSON file (true/false)
-      CLIENT_EXPORT_ENABLED: "false"
+      # Useful for external applications that need to know who's connected
+      CLIENT_EXPORT_ENABLED: "true"
 
       # Enable server-side channel presets (true/false)
-      SERVER_SIDE_PRESETS_ENABLED: "false"
+      # Set to "true" to provide predefined radio presets to clients
+      SERVER_SIDE_PRESETS_ENABLED: "true"
 
       # Enable HTTP server for SRS management endpoints (true/false)
+      # Required to enable the REST API (e.g. /clients, /client/kick/name/{name})
       HTTP_SERVER_ENABLED: "true"
 
       # Port for the HTTP server (must match exposed port above, e.g., 8080:8080)
@@ -56,77 +61,103 @@ services:
       LOTATC_EXPORT_ENABLED: "false"
 
       # Frequencies that are always available for testing (comma-separated MHz)
+      # Add frequencies here that users can use to test their radio setup
       TEST_FREQUENCIES: "247.2,120.3"
 
       # Frequencies available in the lobby before joining a mission (comma-separated MHz)
+      # Users can communicate on these frequencies while waiting
       GLOBAL_LOBBY_FREQUENCIES: "248.22"
 
       # Enable External AWACS mode for server-side radio management (true/false)
+      # Set to "true" if you want the server to manage radios instead of DCS
       EXTERNAL_AWACS_MODE: "true"
 
       # Prevent enemy teams from hearing each other's radio (true/false)
+      # Set to "true" for realistic military simulation
       COALITION_AUDIO_SECURITY: "false"
 
       # Prevent spectators from hearing any radio communications (true/false)
+      # Set to "true" if spectators shouldn't hear mission communications
       SPECTATORS_AUDIO_DISABLED: "false"
 
       # Enable Line of Sight radio limitations (true/false)
+      # Set to "true" for realistic radio range based on terrain and distance
       LOS_ENABLED: "false"
 
       # Enable distance-based radio range limitations (true/false)
+      # Set to "true" for realistic radio range based on distance only
       DISTANCE_ENABLED: "false"
 
       # Enable real-world radio transmission effects (true/false)
+      # Adds realistic radio static and effects to transmissions
       IRL_RADIO_TX: "false"
 
       # Enable real-world radio interference effects (true/false)
+      # Adds realistic interference when receiving radio
       IRL_RADIO_RX_INTERFERENCE: "false"
 
       # Allow more than 10 radio presets per aircraft (true/false)
+      # Set to "true" for expanded radio capabilities
       RADIO_EXPANSION: "true"
 
       # Allow encrypted radio communications (true/false)
+      # Enables encryption features for secure communications
       ALLOW_RADIO_ENCRYPTION: "true"
 
       # Force all radios to use encryption (true/false)
+      # Set to "true" if all communications must be encrypted
       STRICT_RADIO_ENCRYPTION: "false"
 
       # Show number of users tuned to each frequency (true/false)
+      # Displays user count next to frequencies in the radio overlay
       SHOW_TUNED_COUNT: "true"
 
       # Override individual radio effects settings (true/false)
+      # Forces server radio effects settings for all clients
       RADIO_EFFECT_OVERRIDE: "false"
 
       # Show the name of who is transmitting (true/false)
+      # Displays transmitter's name during radio communications
       SHOW_TRANSMITTER_NAME: "true"
 
       # Number of days to keep transmission logs (number)
+      # Older logs are automatically deleted after this many days
       TRANSMISSION_LOG_RETENTION: "2"
 
       # Maximum number of retransmission nodes (0 = unlimited)
+      # Limits how many relay stations can chain together
       RETRANSMISSION_NODE_LIMIT: "0"
 
       # ===== SERVER CONNECTION SETTINGS =====
 
       # File path for exporting connected clients list
+      # Only change if you need the file in a different location
       CLIENT_EXPORT_FILE_PATH: "clients-list.json"
 
       # IP address the server listens on (0.0.0.0 = all interfaces)
+      # Change only if you need to bind to a specific network interface
       SERVER_IP: "0.0.0.0"
 
       # Port number the server listens on
+      # Must match the port mapping above (default: 5002)
       SERVER_PORT: "5002"
 
       # Automatically configure router port forwarding via UPnP (true/false)
+      # Set to "true" if your router supports UPnP and you want automatic setup
       UPNP_ENABLED: "true"
 
       # Check for beta version updates (true/false)
+      # Set to "true" if you want to be notified about beta releases
       CHECK_FOR_BETA_UPDATES: "false"
 
       # ===== EXTERNAL AWACS MODE PASSWORDS =====
+      # These passwords allow external applications to control radios
+      # Change these from default values for security!
 
       # Password for blue team external control
+      # Change "blue" to a secure password for blue team access
       EXTERNAL_AWACS_MODE_BLUE_PASSWORD: "blue"
 
       # Password for red team external control
+      # Change "red" to a secure password for red team access
       EXTERNAL_AWACS_MODE_RED_PASSWORD: "red"

@@ -2,7 +2,7 @@
 # SRS Server Configuration and Startup Script
 
 set -e
-CONFIG_FILE="server.cfg"
+CONFIG_FILE="/opt/srs/cfg/server.cfg"
 
 # ============================================================================  
 # CREATE REQUIRED DIRECTORIES  
@@ -15,6 +15,10 @@ echo "Created directories: Presets"
 mkdir -p logs
 chmod 755 logs
 echo "Created directory: logs"
+
+mkdir -p cfg
+chmod 755 cfg
+echo "Created directory: cfg"
 echo ""
 
 # ============================================================================  
@@ -56,7 +60,7 @@ echo ""
 
 # [Server Settings]
 echo "[Server Settings]"
-echo "CLIENT_EXPORT_FILE_PATH=${CLIENT_EXPORT_FILE_PATH:-clients-list.json}"
+echo "CLIENT_EXPORT_FILE_PATH=${CLIENT_EXPORT_FILE_PATH:-logs/clients-list.json}"
 echo "SERVER_IP=${SERVER_IP:-0.0.0.0}"
 echo "SERVER_PORT=${SERVER_PORT:-5002}"
 echo "UPNP_ENABLED=${UPNP_ENABLED:-true}"
@@ -87,7 +91,7 @@ echo ""
 echo "Starting SRS Server..."
 
 # Build the startup command with conditional arguments
-STARTUP_CMD="./SRS-Server-Commandline --cfg=server.cfg"
+STARTUP_CMD="./SRS-Server-Commandline --cfg=/opt/srs/$CONFIG_FILE"
 
 # Add server-side presets flag if enabled
 if [ "${SERVER_SIDE_PRESETS_ENABLED:-false}" = "true" ]; then
