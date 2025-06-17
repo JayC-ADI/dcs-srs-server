@@ -8,9 +8,14 @@ CONFIG_FILE="/opt/srs/cfg/server.cfg"
 # CREATE REQUIRED DIRECTORIES  
 # ============================================================================  
 echo "Creating required SRS server directories..."
-mkdir -p Presets
-chmod 755 Presets
-echo "Created directories: Presets"
+
+if [ ! -d Presets ] || [ -z "$(find Presets -type f -name '*.txt' -print -quit)" ]; then
+    echo "Creating Presets directory and initializing default (if needed)..."
+    mkdir -p Presets
+    chmod 755 Presets
+else
+    echo "Presets directory exists and contains preset files. Skipping creation."
+fi
 
 mkdir -p logs
 chmod 755 logs
