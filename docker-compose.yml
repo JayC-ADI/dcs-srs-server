@@ -8,7 +8,7 @@ services:
     container_name: dcs-srs
 
     # Docker image to use - only change if you need a different version
-    image: jaycadi/dcs-srs-server:2.2.0.4-11
+    image: jaycadi/dcs-srs-server:2.2.0.4-15
 
     deploy:
       # Number of container instances to run (1 = single server, 0 = disabled)
@@ -25,9 +25,9 @@ services:
       - "8080:8080/tcp"  # REST API port (only expose if using REST API)
 
     volumes:
-      # Mount host directories to allow user-managed presets and logs
-      - "/docker/dcs-srs/Presets:/opt/srs/Presets"
+      # Mount host directories to allow user-managed logs and config
       - "/docker/dcs-srs/logs:/opt/srs/logs"
+      - "/docker/dcs-srs/cfg:/opt/srs/cfg"
 
     # WORKING DIRECTORY & ENTRYPOINT
     working_dir: /opt/srs
@@ -132,7 +132,7 @@ services:
 
       # File path for exporting connected clients list
       # Only change if you need the file in a different location
-      CLIENT_EXPORT_FILE_PATH: "clients-list.json"
+      CLIENT_EXPORT_FILE_PATH: "/opt/srs/logs/clients-list.json"
 
       # IP address the server listens on (0.0.0.0 = all interfaces)
       # Change only if you need to bind to a specific network interface
