@@ -4,18 +4,22 @@
 set -e
 CONFIG_FILE="server.cfg"
 
-# ============================================================================
-# CREATE REQUIRED DIRECTORIES
-# ============================================================================
+# ============================================================================  
+# CREATE REQUIRED DIRECTORIES  
+# ============================================================================  
 echo "Creating required SRS server directories..."
 mkdir -p Presets
 chmod 755 Presets
 echo "Created directories: Presets"
+
+mkdir -p logs
+chmod 755 logs
+echo "Created directory: logs"
 echo ""
 
-# ============================================================================
-# GENERATE CONFIGURATION FILE
-# ============================================================================
+# ============================================================================  
+# GENERATE CONFIGURATION FILE  
+# ============================================================================  
 echo "Generating SRS server configuration..."
 
 # Remove existing configuration file if it exists
@@ -67,9 +71,9 @@ echo "EXTERNAL_AWACS_MODE_BLUE_PASSWORD=${EXTERNAL_AWACS_MODE_BLUE_PASSWORD:-blu
 echo "EXTERNAL_AWACS_MODE_RED_PASSWORD=${EXTERNAL_AWACS_MODE_RED_PASSWORD:-red}"
 } > "$CONFIG_FILE"
 
-# ============================================================================
-# DISPLAY CONFIGURATION STATUS
-# ============================================================================
+# ============================================================================  
+# DISPLAY CONFIGURATION STATUS  
+# ============================================================================  
 echo ""
 echo "Current server.cfg:"
 echo "==================="
@@ -77,9 +81,9 @@ cat "$CONFIG_FILE"
 echo "==================="
 echo ""
 
-# ============================================================================
-# START THE SRS SERVER
-# ============================================================================
+# ============================================================================  
+# START THE SRS SERVER  
+# ============================================================================  
 echo "Starting SRS Server..."
 
 # Build the startup command with conditional arguments
