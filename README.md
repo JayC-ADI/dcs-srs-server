@@ -161,7 +161,7 @@ services:
       
       # Enable server-side channel presets (true/false)
       # Set to "true" to provide predefined radio presets to clients
-      SERVER_SIDE_PRESETS_ENABLED: "false"
+      SERVER_PRESETS_ENABLED: "false"
       
       # Enable HTTP server for SRS management endpoints (true/false)
       # Set to "true" to enable HTTP API for client management
@@ -373,13 +373,13 @@ curl -X POST http://your-server:8080/client/ban/guid/12345678-1234-1234-1234-123
 
 Server-side channel presets allow you to provide predefined radio configurations to all clients. This feature is particularly useful for organized events or training scenarios.
 
-**Important**: The SRS server requires the `--serverPresetChannelsEnabled=true` command-line argument to activate server-side presets, regardless of the configuration file setting. This Docker image automatically handles this requirement - when you set `SERVER_SIDE_PRESETS_ENABLED: "true"`, the entrypoint script will automatically add the necessary command-line argument during server startup.
+**Important**: The SRS server requires the `--serverPresetChannelsEnabled=true` command-line argument to activate server-side presets, regardless of the configuration file setting. This Docker image automatically handles this requirement - when you set `SERVER_PRESETS_ENABLED: "true"`, the entrypoint script will automatically add the necessary command-line argument during server startup.
 
 ### Setting Up Presets
 
 1. **Enable the Feature**
    ```yaml
-   SERVER_SIDE_PRESETS_ENABLED: "true"
+   SERVER_PRESETS_ENABLED: "true"
    ```
    
    The entrypoint script will automatically add `--serverPresetChannelsEnabled=true` to the server startup command when this is enabled.
@@ -419,7 +419,7 @@ To update presets:
 2. Changes are automatically picked up by the server
 3. No container restart required for preset changes
 
-**Note**: If server-side presets aren't working, ensure `SERVER_SIDE_PRESETS_ENABLED` is set to `"true"` (as a string) in your docker-compose.yml or .env file. The containerized solution automatically handles the required command-line argument that the SRS server needs to enable this feature.
+**Note**: If server-side presets aren't working, ensure `SERVER_PRESETS_ENABLED` is set to `"true"` (as a string) in your docker-compose.yml or .env file. The containerized solution automatically handles the required command-line argument that the SRS server needs to enable this feature.
 
 ## IP Banning
 

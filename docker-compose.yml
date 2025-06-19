@@ -46,7 +46,7 @@ services:
 
       # Enable server-side channel presets (true/false)
       # Set to "true" to provide predefined radio presets to clients
-      SERVER_SIDE_PRESETS_ENABLED: "true"
+      SERVER_PRESETS_ENABLED: "true"
 
       # Enable HTTP server for SRS management endpoints (true/false)
       # Required to enable the REST API (e.g. /clients, /client/kick/name/{name})

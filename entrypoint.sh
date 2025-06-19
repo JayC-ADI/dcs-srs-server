@@ -45,7 +45,7 @@ fi
 echo "[General Settings]"
 echo "TRANSMISSION_LOG_ENABLED=${TRANSMISSION_LOG_ENABLED:-false}"
 echo "CLIENT_EXPORT_ENABLED=${CLIENT_EXPORT_ENABLED:-false}"
-echo "SERVER_SIDE_PRESETS_ENABLED=${SERVER_SIDE_PRESETS_ENABLED:-false}"
+echo "SERVER_PRESETS_ENABLED=${SERVER_PRESETS_ENABLED:-false}"
 echo "LOTATC_EXPORT_ENABLED=${LOTATC_EXPORT_ENABLED:-false}"
 echo "TEST_FREQUENCIES=${TEST_FREQUENCIES:-247.2,120.3}"
 echo "GLOBAL_LOBBY_FREQUENCIES=${GLOBAL_LOBBY_FREQUENCIES:-248.22}"
@@ -102,7 +102,7 @@ echo "Starting SRS Server..."
 STARTUP_CMD="./SRS-Server-Commandline --cfg=$CONFIG_FILE"
 
 # Add server-side presets flag if enabled
-if [ "${SERVER_SIDE_PRESETS_ENABLED:-false}" = "true" ]; then
+if [ "${SERVER_PRESETS_ENABLED:-false}" = "true" ]; then
     STARTUP_CMD="$STARTUP_CMD --serverPresetChannelsEnabled=true"
     echo "Server-side presets enabled via command line argument"
 fi
