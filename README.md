@@ -6,6 +6,8 @@ A high-performance, containerized DCS-SRS voice server implementation designed f
 
 This repository provides a Docker image for the Linux DCS-SRS server, allowing end users and groups to easily deploy working SRS servers to virtual machines and VPS instances. This containerized approach simplifies server setup and makes reliable voice communication more accessible for DCS communities.
 
+**Linux Compatibility**: Version 2.3.4.0 includes confirmed Linux support running under Wine with .NET Desktop 9 (and .NET 9), providing native Linux deployment capabilities for improved performance and compatibility.
+
 **Special Thanks**: Atlas Defense Industries ([https://adi.sc/](https://adi.sc/)) for helping to put together and test this Docker setup.
 
 ## Table of Contents
@@ -123,7 +125,7 @@ services:
     container_name: dcs-srs
     
     # Docker image to use - only change if you need a different version
-    image: jaycadi/dcs-srs-server:2.2.0.5
+    image: jaycadi/dcs-srs-server:2.3.4.0
     
     deploy:
       # Number of container instances to run (1 = single server, 0 = disabled)
@@ -295,14 +297,15 @@ The entrypoint script will regenerate the configuration file with your updated s
 
 ### Enhanced Server Management
 
-Version 2.3.0.3 introduces several enhanced server management features:
+Version 2.3.4.0 introduces several enhanced server management features:
 
+- **Linux Native Support**: Confirmed working under Wine with .NET Desktop 9 and .NET 9 for improved Linux compatibility
 - **Improved IP Detection**: Automatic server IP detection for SRS connections
 - **Simplified Chat Commands**: New shorter autoconnect chat command (just port needed)
 - **Enhanced UI**: Consistent buttons and interface improvements across settings
 - **Better Logging**: Fixed transmission logging with proper CSV format support
 - **Automatic Command-Line Arguments**: The entrypoint script automatically handles all required SRS server startup arguments:
-  - `--port` and `--address` from environment variables (SERVER_PORT and SERVER_IP)
+  - `--port` and `--serverBindIP` from environment variables (SERVER_PORT and SERVER_IP)
   - `--serverPresetChannelsEnabled=true` when SERVER_PRESETS_ENABLED is true
   - `--cfg` pointing to the generated configuration file
 - **Server-Side Presets Fix**: Complete automation of server-side presets feature activation
@@ -435,7 +438,7 @@ Since the banned.txt file is stored within the container, manual IP management r
 
 ```bash
 # Access the container to view banned IPs
-docker exec -it dcs-srs cat /app/banned.txt
+docker exec -it dcs-srs cat /opt/srs/banned.txt
 
 # Remove a banned IP by recreating the container
 # (This will clear all bans - use REST API for selective management)
@@ -548,6 +551,6 @@ Special thanks to **Atlas Defense Industries** ([https://adi.sc/](https://adi.sc
 
 ---
 
-**Important**: Version 2.2.0.4 requires both TCP and UDP on the same port (default 5002). The server will NOT work properly if only one protocol is forwarded. Ensure your firewall and network configuration allow both protocols.
+**Important**: Version 2.3.4.0 requires both TCP and UDP on the same port (default 5002). The server will NOT work properly if only one protocol is forwarded. Ensure your firewall and network configuration allow both protocols.
 
 **Note**: This Docker image is designed to simplify DCS-SRS server deployment for communities and groups. For the latest DCS-SRS client software, visit [http://dcssimpleradio.com/](http://dcssimpleradio.com/) or download directly from the [GitHub releases page](https://github.com/ciribob/DCS-SimpleRadioStandalone/releases).
